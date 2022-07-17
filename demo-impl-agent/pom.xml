@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>cn.milai.demo-impl</groupId>
+		<artifactId>demo-impl-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>demo-impl-agent</artifactId>
+
+	<build>
+	   <!-- 设置 mvn 打包 jar 包名OFS -->
+		<finalName>demo-impl-demo</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.1</version>
+				<configuration>
+					<source>17</source>
+					<target>17</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.2</version>
+				<executions>
+					<execution>
+					    <!--
+					       指定为 default-jar，表示直接使用 maven-jar-plugin 插件打包的 jar 包，不再进行默认打包。
+					       若设置其他值，需要指定 configuration 里的 classifier，以避免两个 jar 包名字冲突，否则打包时将报错 
+					    -->
+						<id>default-jar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<archive>
+								<manifest>
+								    <!-- 指定通过 java -jar 执行时运行 main 方法所在类 -->
+									<mainClass>cn.milai.demoimpl.agent.Main</mainClass>
+								</manifest>
+								<!-- https://docs.oracle.com/javase/7/docs/api/java/lang/instrument/package-summary.html -->
+								<manifestEntries>
+								    <!-- 开启 Instrument redefineClass 功能，默认关闭  -->
+									<Can-Redefine-Classes>true</Can-Redefine-Classes>
+									<!--
+									   通过 java -javaagent:agent.jar -jar XXX.jar 时，将从这里指定的类中寻找
+									   public static void premain(String agentArgs, Instrumentation inst)
+									   方法并运行
+									-->
+									<Premain-Class>cn.milai.demoimpl.agent.AgentMain</Premain-Class>
+									<!--
+									   通过 JVM 启动后动态 Attach 的方式 loadAgent 时，将从这里指定的类中寻找
+									   public static void agentmain(String agentArgs, Instrumentation inst)
+									   方法并运行 
+									 -->
+									<Agent-Class>cn.milai.demoimpl.agent.AgentMain</Agent-Class>
+								</manifestEntries>
+							</archive>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+	<!-- 
+	   JDK9 之前需要通过 <scope>system</scope> 的方式引入 tools.jar 依赖，JDK9 开始移除 tools.jar，相关类已默认导入，无需引入依赖
+	 -->
+	</dependencies>
+</project>
