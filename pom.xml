@@ -10,6 +10,7 @@
 	<modules>
 		<module>demo-impl-agent</module>
 		<module>demo-impl-algorithm</module>
+		<module>demo-impl-data-structure</module>
 	</modules>
 
 	<dependencyManagement>
