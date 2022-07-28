@@ -7,10 +7,18 @@
 	<packaging>pom</packaging>
 	<name>demo-impl-parent</name>
 	<description>demo-impl parent pom</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-parent</artifactId>
+		<version>2.1.3.RELEASE</version>
+	</parent>
+
 	<modules>
 		<module>demo-impl-agent</module>
 		<module>demo-impl-algorithm</module>
 		<module>demo-impl-data-structure</module>
+		<module>demo-impl-spring-security</module>
 	</modules>
 
 	<dependencyManagement>
