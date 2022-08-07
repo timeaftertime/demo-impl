@@ -1,0 +1,10 @@
+server:
+  port: 80
+spring:
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8080  # sentinel 控制台的 host:port
+        port: 8081  # 启动一个 HTTP Server 用来接收来自 sentinel 控制台流控规则修改的请求
+  application:
+    name: hello
