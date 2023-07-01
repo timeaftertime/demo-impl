@@ -1,4 +1,4 @@
-package cn.milai.demoimpl.datastructure;
+package cn.milai.demoimpl.datastructure.tree;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

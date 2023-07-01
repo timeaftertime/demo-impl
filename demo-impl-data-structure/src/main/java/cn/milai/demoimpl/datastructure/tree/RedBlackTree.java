@@ -1,4 +1,4 @@
-package cn.milai.demoimpl.datastructure;
+package cn.milai.demoimpl.datastructure.tree;
 
 import java.util.Comparator;
 
