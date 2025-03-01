@@ -26,17 +26,19 @@ public class Parser {
 	public Node parse(TokenScanner scanner) {
 		scanner = filterBlank(scanner);
 		Stack<Node> stack = new Stack<>();
-		Node root = new Node(grammer.getStartSymbol());
+		Node root = new Node(grammer.getStartSymbol(), null);
 		// null 表示匹配结束
 		stack.push(null);
 		stack.push(root);
 		Node last = null;
 		while (!stack.isEmpty()) {
 			Token token = scanner.now();
+			printStack(stack, token);
+//			System.out.println(NodePrintUtil.parseNodeTree(root));
 			Node now = stack.pop();
 			if (now == null) {
 				if (token != null) {
-					last = rollback(scanner, now, stack);
+					last = rollback(scanner, null, last, stack);
 					continue;
 				}
 				return root;
@@ -48,7 +50,7 @@ public class Parser {
 				if (selectNextProduction(scanner, stack, now)) {
 					continue;
 				}
-				last = rollback(scanner, now, stack);
+				last = rollback(scanner, now, now.getPre(), stack);
 				continue;
 			}
 			if (match(symbol, token)) {
@@ -56,9 +58,22 @@ public class Parser {
 				scanner.next();
 				continue;
 			}
-			last = rollback(scanner, now, stack);
+			last = rollback(scanner, now, now.getPre(), stack);
 		}
-		throw new IllegalStateException("匹配完成前栈空");
+		throw new IllegalStateException(
+				String.format("匹配完成前栈空: next is(\"%s\", %d)", scanner.now().getOrigin(), scanner.getIndex()));
+	}
+
+	private void printStack(Stack<Node> stack, Token token) {
+		List<String> codes = new ArrayList<>();
+		for (int i = 1; i < stack.size(); i++) {
+			codes.add(stack.get(i).getSymbol().getCode());
+		}
+		String origin = null;
+		if (token != null) {
+			origin = token.getOrigin();
+		}
+		System.out.println(codes + " -> " + origin);
 	}
 
 	private TokenScanner filterBlank(TokenScanner scanner) {
@@ -81,21 +96,21 @@ public class Parser {
 	 * @param stack
 	 * @return
 	 */
-	private Node rollback(TokenScanner scanner, Node now, Stack<Node> stack) {
-		Node pre = now.getPre();
-		// 存在前一个结点 pre ，且 pre 是非终结符且使用的不是空产生式，则 pre 一定是 now 的父节点
-		if (pre != null && pre.getSymbol().isNonTerminal() && !pre.getNowProduction().isEpsilon()) {
-			// 弹出在栈中尚未匹配的兄弟节点
-			Production p = pre.getNowProduction();
-			for (Symbol child : p.getRights()) {
-				if (stack.peek().getSymbol() == child) {
-					stack.pop();
-				}
+	private Node rollback(TokenScanner scanner, Node now, Node pre, Stack<Node> stack) {
+		// pre 节点不是父节点时
+		if (now != null && pre != now.getParent()) {
+			now.resetProductionIndex();
+			stack.push(now);
+		} else {
+			// pre 是父节点时，弹出在栈中尚未匹配的兄弟节点
+			while (stack.peek() != null && stack.peek().getParent() == pre) {
+				stack.pop();
 			}
 		}
+
+		// 来到要回滚的节点
+		now = pre;
 		while (true) {
-			// 回到当前结点的父节点或左兄弟节点
-			now = now.getPre();
 			// 回滚到根节点，回滚失败
 			if (now == null) {
 				throw new CompilerException("匹配失败");
@@ -109,6 +124,8 @@ public class Parser {
 			if (selectNextProduction(scanner, stack, now)) {
 				return now;
 			}
+			// 回到当前结点的父节点或左兄弟节点
+			now = now.getPre();
 		}
 	}
 
@@ -132,7 +149,7 @@ public class Parser {
 				}
 				List<Node> children = new ArrayList<>();
 				for (Symbol child : p.getRights()) {
-					children.add(new Node(child));
+					children.add(new Node(child, now));
 				}
 				now.setChildren(children);
 				for (int j = children.size() - 1; j >= 0; j--) {

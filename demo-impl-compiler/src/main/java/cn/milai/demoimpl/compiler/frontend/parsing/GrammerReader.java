@@ -2,7 +2,6 @@ package cn.milai.demoimpl.compiler.frontend.parsing;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 import cn.milai.common.base.Strings;
@@ -24,7 +23,6 @@ public class GrammerReader {
 	 * @return
 	 */
 	public static Grammer parseGrammer(InputStream input) {
-		Map<String, String> aliases = new HashMap<>();
 		int lineNumber = 0;
 		Grammer.Builder builder = new Grammer.Builder();
 		for (String line : InputStreams.readLines(input)) {
@@ -32,11 +30,11 @@ public class GrammerReader {
 			if (isEmptyLine(line)) {
 				continue;
 			}
-			String[] words = parseWords(aliases, line);
+			String[] words = parseWords(builder.getAlias(), line);
 			if (words.length >= 3) {
 				switch (words[1]) {
 				case Keywords.ALIAS:
-					aliases.put(words[0], words[2]);
+					builder.getAlias().put(words[0], words[2]);
 					continue;
 				case Keywords.PRODUCTION:
 					builder.addProduction(words[0], Arrays.copyOfRange(words, 2, words.length));

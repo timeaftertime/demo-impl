@@ -21,6 +21,11 @@
 			<version>0.0.5-SNAPSHOT</version>
 		</dependency>
 		<dependency>
+			<groupId>cn.milai.beginning</groupId>
+			<artifactId>beginning-uniform</artifactId>
+			<version>0.0.5-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>

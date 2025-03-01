@@ -1,0 +1,24 @@
+CFG -> Methods
+
+Methods -> TYPE_VOID IDENTIFIER ( ) { Stmds } Methods
+Methods -> ϵ
+
+Stmds -> Stmd Stmds
+Stmds -> ϵ
+
+Stmd -> IDENTIFIER = Expr
+Stmd -> IF ( Expr ) { Stmds }
+Stmd -> OUTPUTINT ( Expr )
+Stmd -> INPUTINT ( IDENTIFIER )
+
+Expr -> Factor Expr'
+
+Factor -> INT
+Factor -> IDENTIFIER
+Factor -> ( Expr )
+
+Expr' -> > Expr Expr'
+Expr' -> * Expr Expr'
+Expr' -> + Expr Expr'
+Expr' -> - Expr Expr'
+Expr' -> ϵ

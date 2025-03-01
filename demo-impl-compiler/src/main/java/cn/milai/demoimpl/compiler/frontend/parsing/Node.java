@@ -15,6 +15,7 @@ import cn.milai.demoimpl.compiler.frontend.Token;
 public class Node {
 
 	private Node pre;
+	private Node parent;
 	private List<Node> children;
 	private Token token;
 
@@ -22,10 +23,15 @@ public class Node {
 
 	private int productionIndex;
 
-	public Node(Symbol symbol) {
+	public Node(Symbol symbol, Node parent) {
 		this.symbol = symbol;
-		this.productionIndex = -1;
+		this.parent = parent;
 		this.children = new ArrayList<>();
+		resetProductionIndex();
+	}
+
+	public void resetProductionIndex() {
+		this.productionIndex = -1;
 	}
 
 	public Token getToken() {
@@ -40,6 +46,10 @@ public class Node {
 
 	private void checkHasToken() {
 		Assert.isTrue(!symbol.isNonTerminal(), "非终结符结点没有对应Token: " + symbol.getCode());
+	}
+
+	public Node getParent() {
+		return parent;
 	}
 
 	/**
@@ -107,6 +117,9 @@ public class Node {
 			return "";
 		}
 		if (!symbol.isNonTerminal()) {
+			if (token == null) {
+				return null + "(" + symbol.getCode() + ")";
+			}
 			return token.getOrigin();
 		}
 		StringBuilder sb = new StringBuilder();
@@ -121,7 +134,11 @@ public class Node {
 	@Override
 	public String toString() {
 		boolean isNonterminal = symbol.isNonTerminal();
-		return String.format("Node [symbol=%s, pre=%s%s%s]", symbol.getCode(), pre,
+		String preSymbol = null;
+		if (pre != null && pre.symbol != null) {
+			preSymbol = pre.symbol.getCode();
+		}
+		return String.format("Node [symbol=%s, pre=%s%s%s]", symbol.getCode(), preSymbol,
 				(isNonterminal ? String.format(", productionIndex = %d", productionIndex) : ""),
 				(isNonterminal ? String.format(", children = %s", children) : ""));
 	}

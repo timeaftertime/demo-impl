@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * 扫描器
+ * 
  * @author milai
  * @date 2021.08.18
  */
@@ -26,6 +27,7 @@ public abstract class Scanner<T> {
 
 	/**
 	 * 是否还有元素
+	 * 
 	 * @return
 	 */
 	public boolean hasMore() {
@@ -34,6 +36,7 @@ public abstract class Scanner<T> {
 
 	/**
 	 * 将指针后移一个单位并返回移动前的位置的元素
+	 * 
 	 * @return
 	 * @throws IndexOutOfBoundsException 若移动前已经是最后一个元素
 	 */
@@ -43,6 +46,7 @@ public abstract class Scanner<T> {
 
 	/**
 	 * 尝试获取当前元素，若已经没有元素将返回 null
+	 * 
 	 * @return
 	 */
 	public T now() {
@@ -50,8 +54,8 @@ public abstract class Scanner<T> {
 	}
 
 	/**
-	 * 使读指针移动 offset 个元素。
-	 * offset 为正数时将跳过指定个元素，offset 为负数时将回溯指定个元素。
+	 * 使读指针移动 offset 个元素。 offset 为正数时将跳过指定个元素，offset 为负数时将回溯指定个元素。
+	 * 
 	 * @param offset
 	 * @throws IndexOutOfBoundsException 若移动后指针超出范围
 	 */
@@ -61,6 +65,10 @@ public abstract class Scanner<T> {
 			throw new IndexOutOfBoundsException(String.format("size = %d, newIndex = %d", elements.size(), newIndex));
 		}
 		index = newIndex;
+	}
+
+	public int getIndex() {
+		return index;
 	}
 
 	@Override

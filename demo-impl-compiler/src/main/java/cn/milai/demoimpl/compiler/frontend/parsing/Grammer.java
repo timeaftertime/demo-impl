@@ -29,6 +29,7 @@ public class Grammer {
 
 	public static final char UNDERLINE = '_';
 
+	private Map<String, String> alias;
 	private NonTerminalSymbol startSymbol;
 	private Set<NonTerminalSymbol> nonTerminals;
 	private Set<TerminalSymbol> terminals;
@@ -50,12 +51,18 @@ public class Grammer {
 	 */
 	private Map<Production, Set<Symbol>> selects = new HashMap<>();
 
-	private Grammer(Collection<NonTerminalSymbol> nonTerminals, Collection<TerminalSymbol> terminals) {
+	private Grammer(Collection<NonTerminalSymbol> nonTerminals, Collection<TerminalSymbol> terminals,
+			Map<String, String> alias) {
+		this.alias = alias;
 		initSymbols(nonTerminals, terminals);
 		eliminateLeftRecursion();
 		extractCommonLeft();
 		buildSets();
 		// TODO 校验语法合法性
+	}
+
+	public Map<String, String> getAlias() {
+		return alias;
 	}
 
 	private void initSymbols(Collection<NonTerminalSymbol> nonTerminals, Collection<TerminalSymbol> terminals) {
@@ -388,6 +395,8 @@ public class Grammer {
 
 	public static class Builder {
 
+		private Map<String, String> alias = new HashMap<>();
+
 		private Map<String, NonTerminalSymbol> nonTerminals = new HashMap<>();
 
 		private Map<String, TerminalSymbol> terminals = new HashMap<>();
@@ -453,8 +462,12 @@ public class Grammer {
 			}
 		}
 
+		public Map<String, String> getAlias() {
+			return alias;
+		}
+
 		public Grammer build() {
-			return new Grammer(nonTerminals.values(), terminals.values());
+			return new Grammer(nonTerminals.values(), terminals.values(), alias);
 		}
 	}
 

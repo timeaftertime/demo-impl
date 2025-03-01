@@ -1,0 +1,49 @@
+# 定义符号到 Token code 的映射，便于推导式的阅读
+{ = BLOCK_LEFT
+} = BLOCK_RIGHT
+( = BRACKET_LEFT
+) = BRACKET_RIGHT
+= = ASSIGN
++ = PLUS
+- = MINUS
+* = TIMES
+/ = DIVISION
+> = CMP_GT
+
+# 文法开始符号必须为 CFG
+CFG -> Methods
+
+# 方法列表
+Methods -> Method Methods
+Methods -> ϵ
+
+# 方法
+Method -> Type IDENTIFIER ( ) { Stmds }
+
+# 变量类型，暂时只用一个 void 占位
+Type -> TYPE_VOID
+
+# 语句列表
+Stmds -> Stmd Stmds
+Stmds -> ϵ
+
+# 语句
+Stmd -> IF ( Expr ) { Stmds }
+Stmd -> INPUTINT ( IDENTIFIER )
+Stmd -> OUTPUTINT ( Expr )
+Stmd -> IDENTIFIER = Expr
+
+# Expr 表达式
+Expr -> Expr + Expr
+Expr -> Expr - Expr
+Expr -> Expr * Expr
+Expr -> Expr > Expr
+Expr -> Factor
+
+# 常量、变量、括号优先级表达式
+Factor -> IDENTIFIER
+Factor -> ( Expr )
+Factor -> Const
+
+# 常量，暂时只有整数
+Const -> INT

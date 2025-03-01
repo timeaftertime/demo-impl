@@ -1,0 +1,8 @@
+void main() {
+	inputint(v)
+	v = v + 1 + 2 + 3 - (3 + 2) + 1
+	if (v > 100) {
+		outputint(v)
+	}
+	outputint(v * 10)
+}
