@@ -97,8 +97,6 @@ public class CompilerTest {
 	@Test
 	public void testCompile() {
 		byte[] data = Compiler.compile(CompilerTest.class.getResourceAsStream("/code.txt"));
-		printBytesString(getExpectedData());
-		printBytesString(data);
 		assertArrayEquals(getExpectedData(), data);
 	}
 

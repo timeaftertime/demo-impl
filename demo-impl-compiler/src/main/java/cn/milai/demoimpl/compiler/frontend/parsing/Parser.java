@@ -33,7 +33,7 @@ public class Parser {
 		Node last = null;
 		while (!stack.isEmpty()) {
 			Token token = scanner.now();
-			printStack(stack, token);
+//			printStack(stack, token);
 //			System.out.println(NodePrintUtil.parseNodeTree(root));
 			Node now = stack.pop();
 			if (now == null) {
@@ -64,17 +64,17 @@ public class Parser {
 				String.format("匹配完成前栈空: next is(\"%s\", %d)", scanner.now().getOrigin(), scanner.getIndex()));
 	}
 
-	private void printStack(Stack<Node> stack, Token token) {
-		List<String> codes = new ArrayList<>();
-		for (int i = 1; i < stack.size(); i++) {
-			codes.add(stack.get(i).getSymbol().getCode());
-		}
-		String origin = null;
-		if (token != null) {
-			origin = token.getOrigin();
-		}
-		System.out.println(codes + " -> " + origin);
-	}
+//	private void printStack(Stack<Node> stack, Token token) {
+//		List<String> codes = new ArrayList<>();
+//		for (int i = 1; i < stack.size(); i++) {
+//			codes.add(stack.get(i).getSymbol().getCode());
+//		}
+//		String origin = null;
+//		if (token != null) {
+//			origin = token.getOrigin();
+//		}
+//		System.out.println(codes + " -> " + origin);
+//	}
 
 	private TokenScanner filterBlank(TokenScanner scanner) {
 		List<Token> tokens = new ArrayList<>();
